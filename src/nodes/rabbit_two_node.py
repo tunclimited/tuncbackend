@@ -4,6 +4,9 @@ from build.models.Address import Address
 from src.tunclibs.node_base import RabbitMQWorkerCallbackBase
 from src.tunclibs.node_response import NodeResponse
 from src.sql.address import AddressSql
+import logging
+
+logger = logging.getLogger("node-logger")
 
 
 class YourCallbackClass2(RabbitMQWorkerCallbackBase):
@@ -11,6 +14,11 @@ class YourCallbackClass2(RabbitMQWorkerCallbackBase):
         sql_query = text(AddressSql.GET_ALL)
         result = self.db_session.execute(sql_query)
         db_resp = result.fetchall()
+
+        logger.info(
+            "Node here rabbit 2 database query",
+            extra={"tags": {"service": "my-node"}},
+        )
 
         response = Address(
             city=db_resp[0].city,
