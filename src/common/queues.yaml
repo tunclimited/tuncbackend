@@ -1,0 +1,9 @@
+queues:
+  - name: rpc_queue
+  - name: rpc_queue_2
+
+classes:
+  - name: YourCallbackClass1
+    queue: rpc_queue
+  - name: YourCallbackClass2
+    queue: rpc_queue_2

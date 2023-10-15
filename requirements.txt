@@ -1,0 +1,10 @@
+Flask
+flask-cors
+Flask-RESTful
+flask-swagger-ui
+pyodbc
+pika
+climage
+python-logging-loki
+PyYAML
+SQLAlchemy

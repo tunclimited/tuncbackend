@@ -1,0 +1,9 @@
+{
+    "sql_server": {
+        "server": "172.17.0.2:1433",
+        "database": "TestProject",
+        "username": "SA",
+        "password": "password%401234",
+        "driver": "ODBC Driver 17 for SQL Server"
+    }
+}
