@@ -2,11 +2,18 @@ import json
 
 import pika
 
+from src.tunclibs.docker_networking_helper import is_running_in_docker
+
 
 class InitMQ:
     @staticmethod
     def rpc_request(message, QUEUE_NAME):
-        connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+        if is_running_in_docker():
+            url = "rabbitmq"
+        else:
+            url = "localhost"
+
+        connection = pika.BlockingConnection(pika.ConnectionParameters(url))
         channel = connection.channel()
 
         # Declare a queue for sending requests

@@ -1,5 +1,7 @@
 import pika
 
+from src.tunclibs.docker_networking_helper import is_running_in_docker
+
 
 class QueueWorker:
     def __init__(self, queue_name, callback_class):
@@ -8,7 +10,10 @@ class QueueWorker:
         self.connection = None
         self.channel = None
 
-    def connect(self, host='localhost'):
+    def connect(self, host='rabbitmq'):
+        if not is_running_in_docker():
+            host = "localhost"
+
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host))
         self.channel = self.connection.channel()
         self.channel.queue_declare(queue=self.queue_name)
