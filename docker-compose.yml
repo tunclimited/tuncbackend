@@ -1,5 +1,14 @@
 version: '1'
 services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - app-network
+    hostname: rabbitmq
+
   sql-azure:
     image: mcr.microsoft.com/mssql/server
     ports:
@@ -10,15 +19,8 @@ services:
     networks:
       - app-network
     hostname: sqlazure  # Set the hostname to make it accessible via this name
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-    networks:
-      - app-network
-    hostname: rabbitmq
+    depends_on:
+      - rabbitmq
 
   loki:
     image: grafana/loki:latest
@@ -27,6 +29,8 @@ services:
     networks:
       - app-network
     hostname: loki
+    depends_on:
+      - sql-azure
 
   grafana:
     image: grafana/grafana:latest
@@ -38,7 +42,7 @@ services:
       - loki
 
   rest-service:
-    image: frankawesome/tuncrest-4:latest
+    image: frankawesome/tuncrest-9:latest
     ports:
       - "5000:5000"
     networks:
@@ -46,14 +50,18 @@ services:
     depends_on:
       - sql-azure
       - rabbitmq
+      - grafana
     hostname: rest-service  # Set the hostname to make it accessible via this name
 
   node:
-    image: frankawesome/tuncnode-4:latest
+    image: frankawesome/tuncnode-9:latest
     networks:
       - app-network
     depends_on:
       - rabbitmq
+      - rest-service
+      - grafana
+    command: python /src/tunclibs/initiate_database.py && python /src/tunclibs/flyway_service.py
 
 networks:
   app-network:
