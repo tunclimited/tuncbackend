@@ -1,0 +1,35 @@
+FROM python:3.9
+
+WORKDIR /
+
+RUN mkdir -p /src/tunclibs
+COPY src/tunclibs /src/tunclibs
+
+RUN mkdir -p /src/takeons
+COPY src/takeons /src/takeons
+
+RUN apt-get update
+RUN yes | apt install unixodbc-dev
+RUN apt-get update
+
+# Set environment variables for SQL Server ODBC Driver installation
+ENV ACCEPT_EULA=Y
+ENV MSSQL_SA_PASSWORD=password%401234
+
+# Install prerequisites and SQL Server ODBC Driver
+RUN apt-get update && apt-get install -y curl && \
+    curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+    curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+    apt-get update && \
+    apt-get install -y msodbcsql17
+
+RUN pip install --upgrade pip
+RUN pip install pyodbc
+
+RUN echo '#!/bin/sh\npython /src/tunclibs/initiate_database.py\npython /src/tunclibs/flyway_service.py' > /run_files.sh
+
+# Make the shell script executable
+RUN chmod +x /run_files.sh
+
+# Specify the command to run when the container starts
+CMD ["/run_files.sh"]

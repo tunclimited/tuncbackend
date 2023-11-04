@@ -42,7 +42,7 @@ services:
       - loki
 
   rest-service:
-    image: frankawesome/tuncrest-9:latest
+    image: frankawesome/tuncrest-11:latest
     ports:
       - "5000:5000"
     networks:
@@ -51,17 +51,27 @@ services:
       - sql-azure
       - rabbitmq
       - grafana
-    hostname: rest-service  # Set the hostname to make it accessible via this name
+    hostname: rest-service
 
   node:
-    image: frankawesome/tuncnode-9:latest
+    image: frankawesome/tuncnode-11:latest
     networks:
       - app-network
     depends_on:
       - rabbitmq
       - rest-service
       - grafana
-    command: python /src/tunclibs/initiate_database.py && python /src/tunclibs/flyway_service.py
+
+  tuncdb:
+    image: frankawesome/tuncdb-3:latest
+    networks:
+      - app-network
+    depends_on:
+      - rabbitmq
+      - rest-service
+      - grafana
+      - node
+      - sql-azure
 
 networks:
   app-network:

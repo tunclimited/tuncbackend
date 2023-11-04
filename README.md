@@ -3,6 +3,8 @@
 ### BUILD CMAKE ###
 mkdir build && cd build && cmake .. && cmake --build . --target generate_models
 
+mkdir build && cd build && cmake .. && cmake --build . --target generate_models initiate_database flyway_service
+
 docker compose
 docker jenkins
 docker service
