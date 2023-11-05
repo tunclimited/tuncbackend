@@ -1,8 +1,5 @@
 import json
-
-import bcrypt
 from sqlalchemy import text
-from build.models.LoginResponse import LoginResponse
 from src.tunclibs.node_base import RabbitMQWorkerCallbackBase
 from src.tunclibs.node_response import NodeResponse
 import logging
@@ -26,7 +23,6 @@ class LoginClass(RabbitMQWorkerCallbackBase):
         db_resp = result.fetchall()
 
         hash = db_resp[0][3]
-        bytepw = password.encode()
 
         response = dict()
         response["username"] = username

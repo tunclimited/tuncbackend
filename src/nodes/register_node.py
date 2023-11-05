@@ -1,8 +1,6 @@
 import json
-
 import bcrypt
 from sqlalchemy import text
-from build.models.Address import Address
 from src.tunclibs.node_base import RabbitMQWorkerCallbackBase
 from src.tunclibs.node_response import NodeResponse
 import logging
@@ -27,15 +25,13 @@ class RegisterClass(RabbitMQWorkerCallbackBase):
         sql_query = text('insert into [TestProject].[dbo].[Users] values (\'' + username + '\', \'' + email +
                          '\', \'' + password_hash.decode() + '\', \'' + salt.decode() + '\')')
 
-        resp = self.db_session.execute(sql_query)
+        self.db_session.execute(sql_query)
         self.db_session.commit()
 
         logger.info(
             "Inserted a new user - register",
             extra={"tags": {"service": "my-node"}},
         )
-
-        # json_string = json.dumps({}, indent=4)
 
         json_string = json.dumps({}, indent=4)
 

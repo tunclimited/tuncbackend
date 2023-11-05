@@ -32,9 +32,6 @@ class Login(Resource):
 
         response = InitMQ.rpc_request(message=str(jsonify(new_user).json), QUEUE_NAME='login_queue')
 
-        pw = response['password']
-        hash = response['hash'][0]
-
         if response and bcrypt.checkpw(response['password'].encode(), response['hash'][0].encode()):
             access_token = create_access_token(identity=response['username'])
             refresh_token = create_refresh_token(identity=response['username'])
