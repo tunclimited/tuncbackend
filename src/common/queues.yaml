@@ -1,9 +1,15 @@
 queues:
   - name: rpc_queue
   - name: rpc_queue_2
+  - name: login_queue
+  - name: register_queue
 
 classes:
   - name: YourCallbackClass1
     queue: rpc_queue
   - name: YourCallbackClass2
     queue: rpc_queue_2
+  - name: LoginClass
+    queue: login_queue
+  - name: RegisterClass
+    queue: register_queue
