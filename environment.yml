@@ -41,37 +41,5 @@ services:
     depends_on:
       - loki
 
-  rest-service:
-    image: frankawesome/tuncrest-11:latest
-    ports:
-      - "5000:5000"
-    networks:
-      - app-network
-    depends_on:
-      - sql-azure
-      - rabbitmq
-      - grafana
-    hostname: rest-service
-
-  node:
-    image: frankawesome/tuncnode-11:latest
-    networks:
-      - app-network
-    depends_on:
-      - rabbitmq
-      - rest-service
-      - grafana
-
-  tuncdb:
-    image: frankawesome/tuncdb-3:latest
-    networks:
-      - app-network
-    depends_on:
-      - rabbitmq
-      - rest-service
-      - grafana
-      - node
-      - sql-azure
-
 networks:
   app-network:
