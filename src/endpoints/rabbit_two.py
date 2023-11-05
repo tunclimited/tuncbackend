@@ -1,3 +1,4 @@
+from flask_jwt_extended import jwt_required
 from flask_restful import Resource
 
 from src.tunclibs.send_to_node import InitMQ
@@ -6,6 +7,7 @@ import logging
 logger = logging.getLogger("service-logger")
 
 class RabbitTwo(Resource):
+    @jwt_required()
     def get(self):
         logger.info(
             msg="Database call here service here rabbit 2 debug",

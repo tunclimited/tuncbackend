@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 from flask_restful import Api
 import json
 
+from src.auth.login import Login
 from src.auth.register import Register
 from src.endpoints.rabbit import Rabbit
 from src.endpoints.rabbit_two import RabbitTwo
@@ -16,12 +17,14 @@ setup_logger('service-logger')
 
 app = Flask(__name__)
 api = Api(app)
-
+app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
+jwt = JWTManager(app)
 
 def setup_endpoints():
+    api.add_resource(Register, '/register')
+    api.add_resource(Login, '/login')
     api.add_resource(Rabbit, '/rab')
     api.add_resource(RabbitTwo, '/rabtwo')
-    api.add_resource(Register, '/register')
 
 
 setup_endpoints()
