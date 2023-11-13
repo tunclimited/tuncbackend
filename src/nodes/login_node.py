@@ -4,10 +4,13 @@ from src.tunclibs.node_base import RabbitMQWorkerCallbackBase
 from src.tunclibs.node_response import NodeResponse
 import logging
 
+from src.tunclibs.tunc_abstract import tunc
+
 logger = logging.getLogger("node-logger")
 
 
 class LoginClass(RabbitMQWorkerCallbackBase):
+    @tunc
     def callback(self, ch, method, properties, body):
         decoded_string = body.decode('utf-8')
         string_with_double_quotes = decoded_string.replace("'", '"')

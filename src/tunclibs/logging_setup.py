@@ -20,3 +20,8 @@ def setup_logger(logger_origin):
     logger = logging.getLogger(logger_origin)
     logger.addHandler(handler)
     logger.setLevel(logging.DEBUG)
+
+
+def tunc_log(log_message, is_service=False):
+    logger = logging.getLogger("service-logger" if is_service else "node-logger")
+    logger.info(msg=log_message, extra={"tags": {"service": "my-service"} if is_service else "my-node"})

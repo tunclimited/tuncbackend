@@ -3,9 +3,6 @@ import bcrypt
 from sqlalchemy import text
 from src.tunclibs.node_base import RabbitMQWorkerCallbackBase
 from src.tunclibs.node_response import NodeResponse
-import logging
-
-logger = logging.getLogger("node-logger")
 
 
 class RegisterClass(RabbitMQWorkerCallbackBase):
@@ -27,11 +24,6 @@ class RegisterClass(RabbitMQWorkerCallbackBase):
 
         self.db_session.execute(sql_query)
         self.db_session.commit()
-
-        logger.info(
-            "Inserted a new user - register",
-            extra={"tags": {"service": "my-node"}},
-        )
 
         json_string = json.dumps({}, indent=4)
 

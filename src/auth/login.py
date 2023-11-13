@@ -1,24 +1,16 @@
-import json
-
 import bcrypt
-from flask import request, jsonify, Blueprint
+from flask import request, jsonify
 from flask_jwt_extended import create_access_token, create_refresh_token
 from flask_restful import Resource
 
 from build.models.LoginResponse import LoginResponse
+from src.tunclibs.logging_setup import tunc_log
 from src.tunclibs.send_to_node import InitMQ
-import logging
-
-logger = logging.getLogger("service-logger")
 
 
 class Login(Resource):
     def post(self):
-        logger.info(
-            msg="Database call here service here rabbit 2 debug",
-            extra={"tags": {"service": "my-service"}},
-        )
-
+        tunc_log('A new login request has been made', True)
         data = request.get_json()
 
         if 'username' not in data or 'email' not in data or 'password' not in data:
@@ -36,15 +28,9 @@ class Login(Resource):
             access_token = create_access_token(identity=response['username'])
             refresh_token = create_refresh_token(identity=response['username'])
 
-
-        logger.info(
-            "User logged in successfully!",
-            extra={"tags": {"service": "my-node"}},
-        )
-
         resp_obj = LoginResponse(
-            access_token = access_token,
-            refresh_token = refresh_token
+            access_token=access_token,
+            refresh_token=refresh_token
         )
 
         resp_dict = resp_obj.to_dict()
